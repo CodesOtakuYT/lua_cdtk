@@ -152,7 +152,9 @@ impl<
     fn add(&self, other: Self) -> Self {
         let mut vec = Self::new();
         for i in 0..std::cmp::max(self.data.len(), other.data.len()) {
-            vec.push(*self.data.get(i).unwrap_or(&T::zero()) + *other.data.get(i).unwrap_or(&T::zero()))
+            vec.push(
+                *self.data.get(i).unwrap_or(&T::zero()) + *other.data.get(i).unwrap_or(&T::zero()),
+            )
         }
         vec
     }
@@ -160,7 +162,9 @@ impl<
     fn sub(&self, other: Self) -> Self {
         let mut vec = Self::new();
         for i in 0..std::cmp::max(self.data.len(), other.data.len()) {
-            vec.push(*self.data.get(i).unwrap_or(&T::zero()) - *other.data.get(i).unwrap_or(&T::zero()))
+            vec.push(
+                *self.data.get(i).unwrap_or(&T::zero()) - *other.data.get(i).unwrap_or(&T::zero()),
+            )
         }
         vec
     }
@@ -168,7 +172,9 @@ impl<
     fn mul(&self, other: Self) -> Self {
         let mut vec = Self::new();
         for i in 0..std::cmp::max(self.data.len(), other.data.len()) {
-            vec.push(*self.data.get(i).unwrap_or(&T::one()) * *other.data.get(i).unwrap_or(&T::one()))
+            vec.push(
+                *self.data.get(i).unwrap_or(&T::one()) * *other.data.get(i).unwrap_or(&T::one()),
+            )
         }
         vec
     }
@@ -176,7 +182,9 @@ impl<
     fn div(&self, other: Self) -> Self {
         let mut vec = Self::new();
         for i in 0..std::cmp::max(self.data.len(), other.data.len()) {
-            vec.push(*self.data.get(i).unwrap_or(&T::one()) / *other.data.get(i).unwrap_or(&T::one()))
+            vec.push(
+                *self.data.get(i).unwrap_or(&T::one()) / *other.data.get(i).unwrap_or(&T::one()),
+            )
         }
         vec
     }
@@ -184,7 +192,9 @@ impl<
     fn rem(&self, other: Self) -> Self {
         let mut vec = Self::new();
         for i in 0..std::cmp::max(self.data.len(), other.data.len()) {
-            vec.push(*self.data.get(i).unwrap_or(&T::one()) % *other.data.get(i).unwrap_or(&T::one()))
+            vec.push(
+                *self.data.get(i).unwrap_or(&T::one()) % *other.data.get(i).unwrap_or(&T::one()),
+            )
         }
         vec
     }
@@ -223,7 +233,7 @@ impl<
             let mut j = T::zero();
 
             while j < *other.data.get(i).unwrap_or(&T::zero()) {
-                result = result*(*self.data.get(i).unwrap_or(&T::one()));
+                result = result * (*self.data.get(i).unwrap_or(&T::one()));
                 j = j + T::one();
             }
             vec.push(result)
@@ -282,13 +292,17 @@ impl<
         methods.add_meta_method(LuaMetaMethod::Div, |_, this, other| Ok(this.div(other)));
         methods.add_meta_method(LuaMetaMethod::Mod, |_, this, other| Ok(this.rem(other)));
         methods.add_meta_method(LuaMetaMethod::Pow, |_, this, other| Ok(this.pow(other)));
-        methods.add_meta_method(LuaMetaMethod::Concat, |_, this, other| Ok(this.concat(other)));
+        methods.add_meta_method(LuaMetaMethod::Concat, |_, this, other| {
+            Ok(this.concat(other))
+        });
         methods.add_meta_method(LuaMetaMethod::Eq, |_, this, other| Ok(this.eq(other)));
         methods.add_meta_method(LuaMetaMethod::Lt, |_, this, other| Ok(this.lt(other)));
         methods.add_meta_method(LuaMetaMethod::Le, |_, this, other| Ok(this.le(other)));
 
         methods.add_meta_method(LuaMetaMethod::Index, |_, this, index| Ok(this.index(index)));
-        methods.add_meta_method_mut(LuaMetaMethod::NewIndex, |_, this, (index, value)| Ok(this.newindex(index, value)));
+        methods.add_meta_method_mut(LuaMetaMethod::NewIndex, |_, this, (index, value)| {
+            Ok(this.newindex(index, value))
+        });
     }
 }
 
