@@ -5,10 +5,10 @@ edition = "2021"
 authors = ["Ilyas Taouaou (codotaku)"]
 license = "MIT"
 readme = "README.md"
-repository = ""
+repository = "https://github.com/CodesOtakuYT/lua_cdtk"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-colorize = "*"
+colorize = { version = "*" }
 mlua = { version = "*", features = ["luajit", "vendored"] }
 num = "*"
