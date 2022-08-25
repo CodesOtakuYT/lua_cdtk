@@ -6,9 +6,10 @@ authors = ["Ilyas Taouaou (codotaku)"]
 license = "MIT"
 readme = "README.md"
 repository = "https://github.com/CodesOtakuYT/lua_cdtk"
+description = "LuaCDTK is a rust crate to extend Lua with the help of Rust. Still work in progress, welcome to all sorts of contributions!"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-colorize = { version = "*" }
-mlua = { version = "*", features = ["luajit", "vendored"] }
-num = "*"
+colorize = { version = "0.1.0" }
+mlua = { version = "0.8.3", features = ["luajit", "vendored"] }
+num = "0.4.0"
