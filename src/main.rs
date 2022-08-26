@@ -3,6 +3,7 @@ use colorize::AnsiColor;
 
 use mlua::prelude::*;
 use num::{self};
+use std::env;
 use std::fs::read_to_string;
 
 #[derive(Clone)]
@@ -254,6 +255,18 @@ impl<
     fn newindex(&mut self, index: usize, value: T) {
         self.data[index] = value;
     }
+
+    fn scale(&self, scalar: T) -> Self {
+        let mut vec = Self::new();
+        for value in self.data.iter() {
+            vec.push(*value * scalar);
+        }
+        vec
+    }
+
+    // fn table(&self, lua_ctx: &Lua) -> LuaTable {
+        
+    // }
 }
 
 impl<
@@ -273,6 +286,16 @@ impl<
         methods.add_method("product", |_, this, ()| Ok(this.product()));
         methods.add_method("max", |_, this, ()| Ok(this.max()));
         methods.add_method("min", |_, this, ()| Ok(this.min()));
+        methods.add_method("clone", |_, this, ()| Ok(this.clone()));
+        methods.add_method("table", |lua_ctx, this, ()| Ok(
+            {
+                let t = lua_ctx.create_table().unwrap();
+                for (i, value) in this.data.iter().enumerate() {
+                    t.set(i+1, *value).unwrap();
+                }
+                t
+            }
+        ));
         methods.add_method_mut("push", |_, this, value| Ok(this.push(value)));
         methods.add_method_mut("pop", |_, this, ()| Ok(this.pop()));
         methods.add_method_mut("negate", |_, this, ()| Ok(this.negate()));
@@ -303,6 +326,10 @@ impl<
         methods.add_meta_method_mut(LuaMetaMethod::NewIndex, |_, this, (index, value)| {
             Ok(this.newindex(index, value))
         });
+        methods.add_meta_method(
+            LuaMetaMethod::Call,
+            |_, this, scalar| Ok(this.scale(scalar)),
+        );
     }
 }
 
@@ -368,7 +395,13 @@ fn main() {
 
     let globals = lua.globals();
     globals.set("CDTK", cdtk_table).unwrap();
-    lua.load(&read_to_string("main.lua").expect(&format!(
+
+    let filename = env::args().skip(1).next().expect(&format!(
+        "{}",
+        "filename argument is required".to_uppercase().bold().red()
+    ));
+
+    lua.load(&read_to_string(filename).expect(&format!(
         "{}",
         "Failed to load script file".to_uppercase().bold().red()
     )))
